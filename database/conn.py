@@ -7,7 +7,7 @@ from common.logger import get_logger
 
 LOGGER = get_logger()
 
-_engine = create_engine('postgresql://user:password@localhost/dbname')
+_engine = create_engine('postgresql://user:123456@localhost:5432/trippop')
 Base = declarative_base()
 Base.metadata.create_all(_engine)
 

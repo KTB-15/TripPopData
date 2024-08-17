@@ -25,7 +25,7 @@ class Member(Base):
     register_at = Column(Date)
 
     visits = relationship('Visit', back_populates='member')
-    favourites = relationship('Favorite', back_populates='member')
+    favourites = relationship('Favourite', back_populates='member')
     reviews = relationship('Review', back_populates='member')
     histories = relationship('History', back_populates='member')
 
@@ -72,7 +72,7 @@ class SGG(Base):
     sgg_name = Column(String)  # 시군구 이름
 
 
-class Favorite(Base):
+class Favourite(Base):
     __tablename__ = 'favourite'
 
     id = Column(Integer, primary_key=True, unique=True, nullable=False)
