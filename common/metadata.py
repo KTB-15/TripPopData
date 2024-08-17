@@ -21,7 +21,7 @@ class _CSVName:
 
 CSV_NAME = _CSVName(
     codea=_to_file_name('codea'),
-    codeb=_to_file_name('codea'),
+    codeb=_to_file_name('codeb'),
     sgg=_to_file_name('sgg'),
     poi=_to_file_name('poi'),
     travel=_to_file_name('travel'),
