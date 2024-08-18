@@ -5,16 +5,17 @@ from sqlalchemy.orm import sessionmaker
 
 from common.logger import get_logger
 
-LOGGER = get_logger()
+LOGGER = get_logger('CONN')
 
-_engine = create_engine('postgresql://user:123456@localhost:5432/trippop')
+_engine = create_engine('postgresql+psycopg2://user:123456@localhost:5432/trippop')
 Base = declarative_base()
 Base.metadata.create_all(_engine)
 
-session = sessionmaker(bind=_engine)()
+Session = sessionmaker(bind=_engine)
 
 
 def load(data: Base) -> bool:
+    session = Session()
     try:
         session.add(data)
         session.commit()
@@ -32,4 +33,4 @@ def load(data: Base) -> bool:
     return False
 
 
-__all__ = [Base, session]
+__all__ = [Base, Session]
