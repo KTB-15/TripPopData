@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey, Text
+from sqlalchemy import Boolean, Column, Integer, String, Date, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from database.conn import Base
 
@@ -38,7 +38,7 @@ class Visit(Base):
     place_id = Column(String, ForeignKey('place.id'), nullable=False)
     residence_time = Column(Integer)  # 체류시간 (분 단위)
     visit_type_code = Column(String)  # 방문지 유형 코드
-    revisit_yn = Column(String)  # 재방문 여부(Y, N)
+    revisit_yn = Column(Boolean)  # 재방문 여부(Y, N)
     rating = Column(String)  # 만족도 (1 ~ 5)
     revisit_intention = Column(String)  # 재방문 의향 (1 ~ 5)
 
