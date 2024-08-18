@@ -63,13 +63,14 @@ class Place(Base):
 
 
 class SGG(Base):
-    __tablename__ = 'SGG'
+    __tablename__ = 'sgg'
 
-    id = Column(String, primary_key=True, unique=True, nullable=False)
-    sido_code = Column(String)  # 시도 코드
-    sgg_code = Column(String)  # 시군구 코드
+    id = Column(String, primary_key=True, unique=True, nullable=False)  # 시도 코드(2자리) + 시군구 코드(3자리)
     sido_name = Column(String)  # 시도 이름
     sgg_name = Column(String)  # 시군구 이름
+
+    def __str__(self):
+        return f"SGG(id={self.id}, sido_name={self.sido_name}, sgg_name={self.sgg_name})"
 
 
 class Favourite(Base):

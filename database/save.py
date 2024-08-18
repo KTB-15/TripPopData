@@ -24,12 +24,11 @@ class DataSaver:
     def save_all(self, callback: Callable) -> bool:
         if self.data is None:
             _logger.error("데이터 없음. CSV 로드 필요.")
-        _data = self.data.iloc
+        _data = self.data.loc
         for _, row in self.data.iterrows():
             _converted = self.convert(row, callback)
             if not _converted:
-                _logger.error(f"CSV -> Model 변환 실패로 인한 종료...")
-                return False
+                continue
             if not insert(_converted):
                 _logger.error(f"DB 저장 실패, DATA:{row}")
                 return False
@@ -43,7 +42,7 @@ class DataSaver:
             _logger.error(f"CSV -> Model 변환 실패. FIELD: {fields}, ERROR: {e}")
 
     def print_data(self, start=0, end=10):
-        _data = self.data.iloc
+        _data = self.data.loc
         for idx in range(start, min(end, len(self.data))):
             _logger.info(_data[idx])
 
