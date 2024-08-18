@@ -12,7 +12,7 @@ class Member(Base):
     nickname = Column(String)
     gender = Column(String)  # Male / Female
     age = Column(Integer)
-    travel_like_sido = Column(String, ForeignKey('SGG.sido_code'))
+    travel_like_sido = Column(String, ForeignKey('sgg.id'))
     travel_like_sgg = Column(String)
     travel_style_1 = Column(String)  # 여행스타일1(자연 vs 도시)
     travel_style_2 = Column(String)  # 여행스타일2(숙박 vs 당일)
@@ -22,7 +22,7 @@ class Member(Base):
     travel_style_6 = Column(String)  # 여행스타일6(알려지지 않은 방문지 vs 핫플)
     travel_style_7 = Column(String)  # 여행스타일7(계획적 vs 즉흥적)
     travel_style_8 = Column(String)  # 여행스타일8(사진 중요 vs 안중요)
-    register_at = Column(Date)
+    register_at = Column(String)
 
     visits = relationship('Visit', back_populates='member')
     favourites = relationship('Favourite', back_populates='member')
