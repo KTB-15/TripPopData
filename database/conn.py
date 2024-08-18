@@ -14,7 +14,7 @@ Base.metadata.create_all(_engine)
 Session = sessionmaker(bind=_engine)
 
 
-def load(data: Base) -> bool:
+def insert(data: Base) -> bool:
     session = Session()
     try:
         session.add(data)
