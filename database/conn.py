@@ -16,6 +16,9 @@ Session = sessionmaker(bind=_engine)
 
 def insert(data: Base) -> bool:
     session = Session()
+    if not data:
+        LOGGER.error("EMPTY DATA")
+        return False
     try:
         session.add(data)
         session.commit()
@@ -23,6 +26,8 @@ def insert(data: Base) -> bool:
         return True
     except IntegrityError as e:
         LOGGER.error(f"무결성 위반됨: {str(e)}")
+        session.rollback()
+        return True
     except SQLAlchemyError as e:
         LOGGER.error(f"SQL 에러: {str(e)}")
     except Exception as e:
