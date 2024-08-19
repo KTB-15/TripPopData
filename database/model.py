@@ -36,7 +36,7 @@ class Member(Base):
 class Visit(Base):
     __tablename__ = 'visit'
 
-    id = Column(Integer, primary_key=True, unique=True, nullable=False)
+    id = Column(Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
     member_id = Column(String, ForeignKey('member.id'), nullable=False)
     place_id = Column(String, ForeignKey('place.id'), nullable=False)
     residence_time = Column(Integer)  # 체류시간 (분 단위)
@@ -52,7 +52,7 @@ class Visit(Base):
 class Place(Base):
     __tablename__ = 'place'
 
-    id = Column(String, primary_key=True, unique=True, nullable=False)
+    id = Column(Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
     area_name = Column(String, unique=True)  # 방문지 이름
     road_name = Column(String)  # 도로명 주소
     x_coord = Column(String)  # 경도

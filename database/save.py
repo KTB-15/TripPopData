@@ -22,11 +22,14 @@ class DataSaver:
             return None
 
     def save_all(self, callback: Callable) -> bool:
+        # csv 로드 필요
         if self.data is None:
             _logger.error("데이터 없음. CSV 로드 필요.")
+        # 각 레코드별로 csv -> model 변환 진행
         _data = self.data.loc
         for _, row in self.data.iterrows():
             _converted = self.convert(row, callback)
+            # 변환 실패는 무시
             if not _converted:
                 continue
             if not insert(_converted):
@@ -35,6 +38,7 @@ class DataSaver:
         return True
 
     # CSV -> Model
+    # callback -> format.py 참조
     def convert(self, fields: pd.Series, callback: Callable) -> Base:
         try:
             return callback(fields)
@@ -42,6 +46,9 @@ class DataSaver:
             _logger.error(f"CSV -> Model 변환 실패. FIELD: {fields}, ERROR: {e}")
 
     def print_data(self, start=0, end=10):
+        if self.data.empty:
+            _logger.warning("로드 미진행 또는 로드 실패됨.")
+            return
         _data = self.data.loc
         for idx in range(start, min(end, len(self.data))):
             _logger.info(_data[idx])
