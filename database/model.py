@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String, Date, ForeignKey, Text
+from sqlalchemy import Boolean, Column, Integer, Double, String, Date, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from database.conn import Base
 
@@ -58,8 +58,8 @@ class Place(Base):
     id = Column(Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
     area_name = Column(String, unique=True)  # 방문지 이름
     road_name = Column(String)  # 도로명 주소
-    x_coord = Column(String)  # 경도
-    y_coord = Column(String)  # 위도
+    x_coord = Column(Double)  # 경도
+    y_coord = Column(Double)  # 위도
     image_url = Column(String)
 
     visits = relationship('Visit', back_populates='place')
