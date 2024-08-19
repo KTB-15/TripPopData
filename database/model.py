@@ -29,6 +29,9 @@ class Member(Base):
     reviews = relationship('Review', back_populates='member')
     histories = relationship('History', back_populates='member')
 
+    def __str__(self):
+        return f"Member(id: {self.id}, gender: {self.gender}, sgg: {self.travel_like_sgg}, sido: {self.travel_like_sido})"
+
 
 class Visit(Base):
     __tablename__ = 'visit'
@@ -50,7 +53,7 @@ class Place(Base):
     __tablename__ = 'place'
 
     id = Column(String, primary_key=True, unique=True, nullable=False)
-    area_name = Column(String)  # 방문지 이름
+    area_name = Column(String, unique=True)  # 방문지 이름
     road_name = Column(String)  # 도로명 주소
     x_coord = Column(String)  # 경도
     y_coord = Column(String)  # 위도
