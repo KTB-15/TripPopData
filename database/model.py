@@ -38,12 +38,12 @@ class Visit(Base):
 
     id = Column(Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
     member_id = Column(String, ForeignKey('member.id'), nullable=False)
-    place_id = Column(String, ForeignKey('place.id'), nullable=False)
+    place_id = Column(Integer, ForeignKey('place.id'), nullable=False)
     residence_time = Column(Integer)  # 체류시간 (분 단위)
-    visit_type_code = Column(String)  # 방문지 유형 코드
+    visit_type_code = Column(Integer)  # 방문지 유형 코드
     revisit_yn = Column(Boolean)  # 재방문 여부(Y, N)
-    rating = Column(String)  # 만족도 (1 ~ 5)
-    revisit_intention = Column(String)  # 재방문 의향 (1 ~ 5)
+    rating = Column(Integer)  # 만족도 (1 ~ 5)
+    revisit_intention = Column(Integer)  # 재방문 의향 (1 ~ 5)
 
     member = relationship('Member', back_populates='visits')
     place = relationship('Place', back_populates='visits')
