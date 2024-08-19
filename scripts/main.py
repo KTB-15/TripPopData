@@ -1,39 +1,48 @@
 from common.logger import get_logger
-from common.metadata import CSV_NAME
-from database.model import SGG, Member, Place
+from common.metadata import *
+from database.model import *
 from database.save import DataSaver
-from database.format import to_SGG, to_member, to_place
+from database.format import *
 
 logger = get_logger('MAIN')
 
 
-def insert_all_SGG():
-    SGG_data_saver = DataSaver(
-        file_name=CSV_NAME.sgg,
-        model_class=SGG,
+def insert_all_data(file_name: str, model_class, convert):
+    data_saver = DataSaver(
+        file_name=file_name,
+        model_class=model_class
     )
-    SGG_data_saver.load_csv()
-    SGG_data_saver.save_all(to_SGG)
+    data_saver.load_csv()
+    data_saver.save_all(convert)
 
 
-def insert_all_member():
-    member_data_saver = DataSaver(
-        file_name=CSV_NAME.traveler,
-        model_class=Member
-    )
-    member_data_saver.load_csv()
-    member_data_saver.save_all(to_member)
+def insert_all_csv(file_name: str, model_class, convert):
+    files = [CSV_NAME_V2.a[file_name], CSV_NAME_V2.b[file_name], CSV_NAME_V2.c[file_name], CSV_NAME_V2.d[file_name]]
+    for file in files:
+        data_saver = DataSaver(
+            file_name=file,
+            model_class=model_class
+        )
+        data_saver.load_csv()
+        data_saver.save_all(convert)
 
+# SGG
+# insert_all_data(CSV_NAME.sgg, SGG, to_SGG)
 
-def insert_all_place():
-    place_data_saver = DataSaver(
-        file_name=CSV_NAME.visit_area_info,
-        model_class=Place
-    )
-    place_data_saver.load_csv()
-    place_data_saver.save_all(to_place)
+# Member
+# insert_all_data(CSV_NAME.traveler, Member, to_member)
 
+# All members
+# insert_all_csv(CSV_NAME.traveler, Member, to_member)
 
-# insert_all_SGG()
-# insert_all_member()
-insert_all_place()
+# Place
+# insert_all_data(CSV_NAME.visit_area_info, Place, to_place)
+
+# All places
+# insert_all_csv(CSV_NAME.visit_area_info, Place, to_place)
+
+# Visit
+# insert_all_data(CSV_NAME.visit_area_info, Visit, to_visit)
+
+# All visits
+# insert_all_csv(CSV_NAME.visit_area_info, Visit, to_visit)
