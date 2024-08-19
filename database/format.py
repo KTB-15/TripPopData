@@ -1,6 +1,6 @@
-from database.conn import Base
+from database.conn import Base, get_filter
 from common.logger import get_logger
-from database.model import Member, SGG, Place
+from database.model import Member, SGG, Place, Visit
 from typing import Union
 
 import pandas as pd
@@ -9,7 +9,7 @@ import datetime
 _logger = get_logger('FORMAT')
 
 '''
-최신 작업일자: 24/08/18
+최신 작업일자: 24/08/19
 '''
 
 '''
@@ -52,8 +52,10 @@ PLACE_CSV_FIELD = [
     'VISIT_AREA_NM', 'LOTNO_ADDR', 'X_COORD', 'Y_COORD', 'VISIT_AREA_TYPE_CD'
 ]
 
+
 def is_valid_visit_type(status: int) -> bool:
     return 1 <= status <= 8
+
 
 def to_place(data) -> Union[Base, None]:
     # 데이터 무시
@@ -77,12 +79,44 @@ def to_place(data) -> Union[Base, None]:
 ///
 CSV FIELD - DB FIELD (필터링 조건)
 ///
-
+없음 - id(시퀀스 넘버 만들어야함 AUTO)
+TRAVEL_ID - member_id(prefix 제거 필요. 2번째 인덱스부터 저장)
+DB 조회 - place_id(방문지명(area_name)을 조회해서 얻어야함)
+RESIDENCE_TIME_MIN - residence_time
+VISIT_AREA_TYPE_CD - visit_type_code (1 ~ 8 유형만)
+REVISIT_YN - revisit_yn(Y -> True, N -> False로 매핑)
+DGSTFN - rating (1 ~ 5)
+REVISIT_INTENTION - revisit_intention (1 ~ 5)
 '''
 
+VISIT_CSV_FIELD = [
+    'TRAVEL_ID', 'VISIT_AREA_TYPE_CD'
+]
 
-def to_visit(data) -> Union[Base, None]:
-    return Base()
+
+def to_visit(data: pd.DataFrame) -> Union[Base, None]:
+    # 필드값 없는 데이터는 불량으로 간주
+    for field in VISIT_CSV_FIELD:
+        if pd.isna(data[field]):
+            _logger.warning(f"SKIP visit {data}")
+            return None
+    # 해당 방문지 있는지 확인, 없으면 무시
+    place = get_filter('area_name', Place, data['VISIT_AREA_NM'])
+    if not place:
+        _logger.warning(f"SKIP visit {data}: NOT FOUND PLACE")
+        return None
+    _logger.info(f"PLACE OF VISIT: {place}, MEMBER OF VISIT: {data['TRAVEL_ID'][2:]}")
+    visit = Visit(
+        member_id=data['TRAVEL_ID'][2:],
+        place_id=place.id,
+        residence_time=int(data['RESIDENCE_TIME_MIN']),
+        visit_type_code=int(data['VISIT_AREA_TYPE_CD']),
+        revisit_yn=True if data['REVISIT_YN'] else False,
+        rating=int(data['DGSTFN']),
+        revisit_intention=int(data['REVISIT_INTENTION'])
+    )
+    _logger.info(visit)
+    return visit
 
 
 '''
