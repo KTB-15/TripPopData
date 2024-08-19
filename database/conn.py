@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
+from typing import Union, Any, Generic, TypeVar
 
 from common.logger import get_logger
 
@@ -38,4 +39,20 @@ def insert(data: Base) -> bool:
     return False
 
 
-__all__ = [Base, Session]
+T = TypeVar('T', bound=Base)
+
+
+def get_filter(field: str, model_class: T, expected: Any) -> Union[T | None]:
+    session = Session()
+    if not field:
+        LOGGER.warning("필드를 넣어주세요.")
+        return None
+    try:
+        _field = getattr(model_class, field)
+    except AttributeError:
+        LOGGER.error(f"{model_class.__name__}에 {field}가 없어요.")
+        return None
+    return session.query(model_class).filter(_field == expected).first()
+
+
+__all__ = [Base, Session, insert, get_filter]
