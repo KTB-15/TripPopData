@@ -1,6 +1,7 @@
 from database.conn import Base
 from common.logger import get_logger
-from database.model import Member, SGG
+from database.model import Member, SGG, Place
+from typing import Union
 
 import pandas as pd
 import datetime
@@ -21,26 +22,66 @@ SGG_NM - sgg_name
 '''
 
 
-def to_SGG(data) -> Base:
+def to_SGG(data) -> Union[Base, None]:
     # 필드값 없는 데이터는 불량으로 간주
     if pd.isna(data['SGG_CD']) or pd.isna(data['SIDO_NM']) or pd.isna(data['SGG_NM']):
         _logger.info(f"SKIP sgg {data}")
         return None
     sgg_cd = str(data['SGG_CD'])[:5]
-    _logger.info(f"{sgg_cd}, {data['SIDO_NM']}, {data['SGG_NM']}")
     sgg = SGG(
         id=sgg_cd,
         sido_name=data['SIDO_NM'],
         sgg_name=data['SGG_NM']
     )
+    _logger.info(sgg)
     return sgg
 
 
-def to_place(data) -> Base:
-    return Base()
+'''
+///
+CSV FIELD - DB FIELD (필터링 조건)
+///
+없음 - id(시퀀스 넘버 만들어야함 AUTO)
+VISIT_AREA_NM - area_name(주소명, unique해야함)
+LOTNO_ADDR - road_name(원래는 도로명 주소를 넣으려 했는데, 없는 경우가 있어서 지번 주소로 넣으려함)
+X_COORD - x_coord
+Y_COORD - y_coord
+'''
+
+PLACE_CSV_FIELD = [
+    'VISIT_AREA_NM', 'LOTNO_ADDR', 'X_COORD', 'Y_COORD', 'VISIT_AREA_TYPE_CD'
+]
+
+def is_valid_visit_type(status: int) -> bool:
+    return 1 <= status <= 8
+
+def to_place(data) -> Union[Base, None]:
+    # 데이터 무시
+    for field in PLACE_CSV_FIELD:
+        # 필드 값 누락 또는 불필요 방문 유형 필터링
+        if pd.isna(data[field]) or not is_valid_visit_type(data['VISIT_AREA_TYPE_CD']):
+            _logger.warning(f"SKIP place {data}")
+            return None
+
+    place = Place(
+        area_name=data['VISIT_AREA_NM'],
+        road_name=data['LOTNO_ADDR'],
+        x_coord=data['X_COORD'],
+        y_coord=data['Y_COORD']
+    )
+    _logger.info(place)
+    return place
 
 
-def to_visit(data) -> Base:
+'''
+///
+CSV FIELD - DB FIELD (필터링 조건)
+///
+
+'''
+
+
+def to_visit(data) -> Union[Base, None]:
     return Base()
 
 
@@ -61,11 +102,11 @@ MEMBER_CSV_FIELD = ['TRAVELER_ID', 'GENDER', 'AGE_GRP', 'TRAVEL_STYL_1', 'TRAVEL
                     'TRAVEL_LIKE_SIDO_1', 'TRAVEL_LIKE_SGG_1']
 
 
-def to_member(data) -> Base:
+def to_member(data) -> Union[Base, None]:
     # 필드값 없는 데이터는 불량으로 간주
     for field in MEMBER_CSV_FIELD:
         if pd.isna(data[field]):
-            _logger.info(f"SKIP member {data}")
+            _logger.warning(f"SKIP member {data}")
             return None
     member = Member(
         id=data['TRAVELER_ID'],
@@ -83,5 +124,5 @@ def to_member(data) -> Base:
         travel_style_8=data['TRAVEL_STYL_8'],
         register_at=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     )
-    _logger.info(f"Member(id: {member.id}, gender: {member.gender}, sgg: {member.travel_like_sgg}, sido: {member.travel_like_sido})")
+    _logger.info(member)
     return member
