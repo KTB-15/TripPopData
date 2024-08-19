@@ -6,11 +6,11 @@ init(autoreset=True)
 
 class _CustomFormatter(logging.Formatter):
     FORMAT = {
-        logging.DEBUG: Fore.BLUE + "%(levelname)s - %(filename)s - Line: %(lineno)d - %(message)s" + Style.RESET_ALL,
-        logging.INFO: Fore.GREEN + "%(levelname)s - %(filename)s - Line: %(lineno)d - %(message)s" + Style.RESET_ALL,
-        logging.WARNING: Fore.YELLOW + "%(levelname)s - %(filename)s - Line: %(lineno)d - %(message)s" + Style.RESET_ALL,
-        logging.ERROR: Fore.RED + "%(levelname)s - %(filename)s - Line: %(lineno)d %(message)s" + Style.RESET_ALL,
-        logging.CRITICAL: Fore.RED + Style.BRIGHT + "%(levelname)s - %(filename)s - Line: %(lineno)d - %(message)s" + Style.RESET_ALL,
+        logging.DEBUG: Fore.BLUE + "%(levelname)s - %(filename)s:%(funcName)s - Line: %(lineno)d - %(message)s" + Style.RESET_ALL,
+        logging.INFO: Fore.GREEN + "%(levelname)s - %(filename)s:%(funcName)s - Line: %(lineno)d - %(message)s" + Style.RESET_ALL,
+        logging.WARNING: Fore.YELLOW + "%(levelname)s - %(filename)s:%(funcName)s - Line: %(lineno)d - %(message)s" + Style.RESET_ALL,
+        logging.ERROR: Fore.RED + "%(levelname)s - %(filename)s:%(funcName)s - Line: %(lineno)d %(message)s" + Style.RESET_ALL,
+        logging.CRITICAL: Fore.RED + Style.BRIGHT + "%(levelname)s - %(filename)s:%(funcName)s - Line: %(lineno)d - %(message)s" + Style.RESET_ALL,
     }
 
     def format(self, record):
