@@ -105,7 +105,7 @@ VISIT_CSV_FIELD = [
 def to_visit(data: pd.DataFrame) -> Union[Base, None]:
     # 필드값 없는 데이터는 불량으로 간주
     for field in VISIT_CSV_FIELD:
-        if pd.isna(data[field]):
+        if pd.isna(data[field]) or not is_valid_visit_type(data['VISIT_AREA_TYPE_CD']):
             # _logger.warning(f"SKIP visit {data}")
             return None
     # 해당 방문지 있는지 확인, 없으면 무시
@@ -119,7 +119,7 @@ def to_visit(data: pd.DataFrame) -> Union[Base, None]:
         place_id=place.id,
         residence_time=int(data['RESIDENCE_TIME_MIN']),
         visit_type_code=int(data['VISIT_AREA_TYPE_CD']),
-        revisit_yn=True if data['REVISIT_YN'] else False,
+        revisit_yn=True if data['REVISIT_YN'] == 'Y' else False,
         rating=int(data['DGSTFN']),
         revisit_intention=int(data['REVISIT_INTENTION'])
     )
