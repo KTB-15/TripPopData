@@ -14,13 +14,13 @@ def _to_file_name_with_folder(folder: str, file: str) -> str:
 
 @dataclass
 class _CSVName:
-    codea: str
-    codeb: str
-    sgg: str
-    poi: str
-    travel: str
     traveler: str
     visit_area_info: str
+    codea: str | None = None
+    codeb: str | None = None
+    sgg: str | None = None
+    poi: str | None = None
+    travel: str | None = None
 
 
 @dataclass
@@ -42,7 +42,7 @@ CSV_NAME = _CSVName(
 )
 
 
-def get_csv_name(folder: str):
+def get_csv_name(folder: str) -> _CSVName:
     _folder = folder + '/'
     return _CSVName(
         traveler=_to_file_name_with_folder(_folder, 'traveler'),
