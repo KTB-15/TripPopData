@@ -53,5 +53,8 @@ class DataSaver:
         for idx in range(start, min(end, len(self.data))):
             _logger.info(_data[idx])
 
+    def __str__(self):
+        return f"DataSaver(file name: {self.file_name}, model class: {self.model_class})"
+
 
 __all__ = [DataSaver]

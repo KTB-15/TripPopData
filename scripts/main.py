@@ -1,13 +1,14 @@
 from common.logger import get_logger
-from common.metadata import *
-from database.model import *
+from common.metadata import CSV_NAME_V2, CSV_NAME
+from database.model import Member, Place, Visit, SGG
 from database.save import DataSaver
-from database.format import *
+from database.format import to_SGG, to_visit, to_place, to_member
 
 logger = get_logger('MAIN')
 
 
 def insert_all_data(file_name: str, model_class, convert):
+    logger.info(file_name)
     data_saver = DataSaver(
         file_name=file_name,
         model_class=model_class
@@ -17,14 +18,17 @@ def insert_all_data(file_name: str, model_class, convert):
 
 
 def insert_all_csv(file_name: str, model_class, convert):
-    files = [CSV_NAME_V2.a[file_name], CSV_NAME_V2.b[file_name], CSV_NAME_V2.c[file_name], CSV_NAME_V2.d[file_name]]
+    files = [getattr(CSV_NAME_V2, folder) for folder in 'abcd']
+    logger.info(files)
     for file in files:
         data_saver = DataSaver(
-            file_name=file,
+            file_name=getattr(file, file_name),
             model_class=model_class
         )
+        logger.info(data_saver)
         data_saver.load_csv()
         data_saver.save_all(convert)
+
 
 # SGG
 # insert_all_data(CSV_NAME.sgg, SGG, to_SGG)
@@ -33,13 +37,13 @@ def insert_all_csv(file_name: str, model_class, convert):
 # insert_all_data(CSV_NAME.traveler, Member, to_member)
 
 # All members
-# insert_all_csv(CSV_NAME.traveler, Member, to_member)
+# insert_all_csv('traveler', Member, to_member)
 
 # Place
 # insert_all_data(CSV_NAME.visit_area_info, Place, to_place)
 
 # All places
-# insert_all_csv(CSV_NAME.visit_area_info, Place, to_place)
+insert_all_csv('visit_area_info', Place, to_place)
 
 # Visit
 # insert_all_data(CSV_NAME.visit_area_info, Visit, to_visit)

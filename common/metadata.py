@@ -25,10 +25,10 @@ class _CSVName:
 
 @dataclass
 class _CSVFolder:
-    a: _CSVName
-    b: _CSVName
-    c: _CSVName
-    d: _CSVName
+    a: _CSVName  # 수도권
+    b: _CSVName  # 동부권
+    c: _CSVName  # 서부권
+    d: _CSVName  # 제주도
 
 
 CSV_NAME = _CSVName(
