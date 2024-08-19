@@ -48,6 +48,9 @@ class Visit(Base):
     member = relationship('Member', back_populates='visits')
     place = relationship('Place', back_populates='visits')
 
+    def __str__(self):
+        return f"Visit(member: {self.member_id}, place: {self.place_id}, visit_code: {self.visit_type_code}, rating: {self.rating})"
+
 
 class Place(Base):
     __tablename__ = 'place'
@@ -63,6 +66,9 @@ class Place(Base):
     favourites = relationship('Favourite', back_populates='place')
     reviews = relationship('Review', back_populates='place')
     histories = relationship('History', back_populates='place')
+
+    def __str__(self):
+        return f"Place(area name: {self.area_name}, coord: {(self.x_coord, self.y_coord)}"
 
 
 class SGG(Base):
