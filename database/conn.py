@@ -8,7 +8,8 @@ from common.logger import get_logger
 
 LOGGER = get_logger('CONN')
 
-_engine = create_engine('postgresql+psycopg2://user:123456@localhost:5432/trippop')
+_engine = create_engine('postgresql+psycopg2://user:123456@localhost:5432/trippop',
+                        pool_size=30, max_overflow=60, pool_timeout=5)
 Base = declarative_base()
 Base.metadata.create_all(_engine)
 
@@ -19,6 +20,7 @@ def insert(data: Base) -> bool:
     session = Session()
     if not data:
         LOGGER.error("EMPTY DATA")
+        session.close()
         return False
     try:
         session.add(data)
