@@ -62,16 +62,24 @@ def to_place(data) -> Union[Base, None]:
     for field in PLACE_CSV_FIELD:
         # 필드 값 누락 또는 불필요 방문 유형 필터링
         if pd.isna(data[field]) or not is_valid_visit_type(data['VISIT_AREA_TYPE_CD']):
-            _logger.warning(f"SKIP place {data}")
+            # _logger.warning(f"SKIP place {data['TRAVEL_ID']}, visit type: {data['VISIT_AREA_TYPE_CD']}")
             return None
+
+    # x 좌표, y 좌표가 숫자인지 확인
+    x_coord, y_coord = float(), float()
+    try:
+        x_coord = float(data['X_COORD'])
+        y_coord = float(data['Y_COORD'])
+    except ValueError:
+        _logger.warning(f"이상한 좌표: {(data['X_COORD'], data['Y_COORD'])}")
 
     place = Place(
         area_name=data['VISIT_AREA_NM'],
         road_name=data['LOTNO_ADDR'],
-        x_coord=data['X_COORD'],
-        y_coord=data['Y_COORD']
+        x_coord=x_coord,
+        y_coord=y_coord
     )
-    _logger.info(place)
+    # _logger.info(place)
     return place
 
 
@@ -98,14 +106,14 @@ def to_visit(data: pd.DataFrame) -> Union[Base, None]:
     # 필드값 없는 데이터는 불량으로 간주
     for field in VISIT_CSV_FIELD:
         if pd.isna(data[field]):
-            _logger.warning(f"SKIP visit {data}")
+            # _logger.warning(f"SKIP visit {data}")
             return None
     # 해당 방문지 있는지 확인, 없으면 무시
     place = get_filter('area_name', Place, data['VISIT_AREA_NM'])
     if not place:
-        _logger.warning(f"SKIP visit {data}: NOT FOUND PLACE")
+        # _logger.warning(f"SKIP visit {data['TRAVEL_ID'][2:]}: NOT FOUND PLACE")
         return None
-    _logger.info(f"PLACE OF VISIT: {place}, MEMBER OF VISIT: {data['TRAVEL_ID'][2:]}")
+    # _logger.info(f"PLACE OF VISIT: {place.id}, MEMBER OF VISIT: {data['TRAVEL_ID'][2:]}")
     visit = Visit(
         member_id=data['TRAVEL_ID'][2:],
         place_id=place.id,
@@ -115,7 +123,7 @@ def to_visit(data: pd.DataFrame) -> Union[Base, None]:
         rating=int(data['DGSTFN']),
         revisit_intention=int(data['REVISIT_INTENTION'])
     )
-    _logger.info(visit)
+    # _logger.info(visit)
     return visit
 
 

@@ -27,13 +27,13 @@ class DataSaver:
             _logger.error("데이터 없음. CSV 로드 필요.")
         # 각 레코드별로 csv -> model 변환 진행
         _data = self.data.loc
-        for _, row in self.data.iterrows():
+        for index, row in self.data.iterrows():
             _converted = self.convert(row, callback)
             # 변환 실패는 무시
             if not _converted:
                 continue
             if not insert(_converted):
-                _logger.error(f"DB 저장 실패, DATA:{row}")
+                _logger.error(f"DB 저장 실패, DATA INDEX: {index}")
                 return False
         return True
 
