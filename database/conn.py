@@ -28,6 +28,7 @@ def insert(data: Base) -> bool:
     except IntegrityError as e:
         LOGGER.error(f"무결성 위반됨: {str(e)}")
         session.rollback()
+        session.close()
         return True
     except SQLAlchemyError as e:
         LOGGER.error(f"SQL 에러: {str(e)}")
@@ -46,12 +47,15 @@ def get_filter(field: str, model_class: T, expected: Any) -> Union[T | None]:
     session = Session()
     if not field:
         LOGGER.warning("필드를 넣어주세요.")
+        session.close()
         return None
     try:
         _field = getattr(model_class, field)
     except AttributeError:
         LOGGER.error(f"{model_class.__name__}에 {field}가 없어요.")
+        session.close()
         return None
+    session.close()
     return session.query(model_class).filter(_field == expected).first()
 
 
