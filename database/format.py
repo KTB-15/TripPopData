@@ -54,10 +54,30 @@ Y_COORD - y_coord
 PLACE_CSV_FIELD = [
     'VISIT_AREA_NM', 'LOTNO_ADDR', 'X_COORD', 'Y_COORD', 'VISIT_AREA_TYPE_CD'
 ]
+VALID_TYPE = [1, 2, 3, 6, 7, 8, 13]
 
 
 def is_valid_visit_type(status: int) -> bool:
-    return 1 <= status <= 8
+    '''
+     1: 자연관광지
+     2: 역사/유적/종교 시설(문화재, 박물관, 촬영지, 절 등)
+     3: 문화 시설(공연장, 영화관, 전시관 등)
+     4: 상업지구(거리, 시장, 쇼핑시설)
+     5: 레저/스포츠 관련 시설(스키, 카트, 수상레저)
+     6: 테마시설(놀이공원, 워터파크)
+     7: 산책로, 둘레길 등
+     8: 지역 축제/행사
+     9: 역, 터미널, 고속도로 휴게소
+     10: 상점
+     11: 식당/카페
+     12: 기타
+     13: 체험 활동 관광지
+     21: 집
+     22: 친구/친지집
+     23: 사무실
+     24: 숙소
+    '''
+    return status in VALID_TYPE
 
 
 def to_place(data) -> Union[Base, None]:
