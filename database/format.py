@@ -5,6 +5,7 @@ from typing import Union
 
 import pandas as pd
 import datetime
+import time
 
 _logger = get_logger('FORMAT')
 
@@ -25,15 +26,17 @@ SGG_NM - sgg_name
 def to_SGG(data) -> Union[Base, None]:
     # 필드값 없는 데이터는 불량으로 간주
     if pd.isna(data['SGG_CD']) or pd.isna(data['SIDO_NM']) or pd.isna(data['SGG_NM']):
-        _logger.info(f"SKIP sgg {data}")
+        # _logger.info(f"SKIP sgg {data}")
         return None
     sgg_cd = str(data['SGG_CD'])[:5]
     sgg = SGG(
         id=sgg_cd,
+        sido_code=int(data['SGG_CD1']),
+        sgg_code=int(data['SGG_CD2']),
         sido_name=data['SIDO_NM'],
         sgg_name=data['SGG_NM']
     )
-    _logger.info(sgg)
+    # _logger.info(sgg)
     return sgg
 
 
@@ -72,6 +75,7 @@ def to_place(data) -> Union[Base, None]:
         y_coord = float(data['Y_COORD'])
     except ValueError:
         _logger.warning(f"이상한 좌표: {(data['X_COORD'], data['Y_COORD'])}")
+        return None
 
     place = Place(
         area_name=data['VISIT_AREA_NM'],
@@ -98,7 +102,8 @@ REVISIT_INTENTION - revisit_intention (1 ~ 5)
 '''
 
 VISIT_CSV_FIELD = [
-    'TRAVEL_ID', 'VISIT_AREA_TYPE_CD'
+    'TRAVEL_ID', 'VISIT_AREA_TYPE_CD', 'RESIDENCE_TIME_MIN', 'VISIT_AREA_TYPE_CD',
+    'REVISIT_YN', 'DGSTFN', 'REVISIT_INTENTION', 'VISIT_AREA_NM'
 ]
 
 
@@ -135,7 +140,11 @@ TRAVELER_ID - id
 GENDER - gender(남 -> Male, 여 -> Female)
 AGE_GRP - age(10 단위)
 TRAVEL_STYL_1 - travel_style_1 (범위: 1 ~ 7)
+
+* * * Deprecated * * *
 TRAVEL_LIKE_SIDO_1 - travel_like_sido
+* * * * * * * * * * * *
+
 TRAVEL_LIKE_SGG_1 - travel_like_sgg
 '''
 
@@ -152,10 +161,11 @@ def to_member(data) -> Union[Base, None]:
             return None
     member = Member(
         id=data['TRAVELER_ID'],
+        member_id=str(time.time()) + "!",
+        password=str(time.time()),
         gender='MALE' if data['GENDER'] == '남' else 'FEMALE',
         age=data['AGE_GRP'],
         travel_like_sgg=data['TRAVEL_LIKE_SGG_1'],
-        travel_like_sido=data['TRAVEL_LIKE_SIDO_1'],
         travel_style_1=data['TRAVEL_STYL_1'],
         travel_style_2=data['TRAVEL_STYL_2'],
         travel_style_3=data['TRAVEL_STYL_3'],
@@ -166,5 +176,5 @@ def to_member(data) -> Union[Base, None]:
         travel_style_8=data['TRAVEL_STYL_8'],
         register_at=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     )
-    _logger.info(member)
+    # _logger.info(member)
     return member
