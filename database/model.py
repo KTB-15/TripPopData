@@ -12,8 +12,7 @@ class Member(Base):
     nickname = Column(String)
     gender = Column(String)  # Male / Female
     age = Column(Integer)
-    travel_like_sido = Column(String, ForeignKey('sgg.id'))
-    travel_like_sgg = Column(String)
+    travel_like_sgg = Column(String, ForeignKey('sgg.id'))
     travel_style_1 = Column(String)  # 여행스타일1(자연 vs 도시)
     travel_style_2 = Column(String)  # 여행스타일2(숙박 vs 당일)
     travel_style_3 = Column(String)  # 여행스타일3(새로운지역 vs 익숙한지역)
@@ -30,7 +29,7 @@ class Member(Base):
     histories = relationship('History', back_populates='member')
 
     def __str__(self):
-        return f"Member(id: {self.id}, gender: {self.gender}, sgg: {self.travel_like_sgg}, sido: {self.travel_like_sido})"
+        return f"Member(id: {self.id}, gender: {self.gender}, sgg: {self.travel_like_sgg})"
 
 
 class Visit(Base):
@@ -75,8 +74,11 @@ class SGG(Base):
     __tablename__ = 'sgg'
 
     id = Column(String, primary_key=True, unique=True, nullable=False)  # 시도 코드(2자리) + 시군구 코드(3자리)
+    sido_code = Column(Integer)
+    sgg_code = Column(Integer)
     sido_name = Column(String)  # 시도 이름
     sgg_name = Column(String)  # 시군구 이름
+
 
     def __str__(self):
         return f"SGG(id={self.id}, sido_name={self.sido_name}, sgg_name={self.sgg_name})"
