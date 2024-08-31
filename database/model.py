@@ -22,6 +22,7 @@ class Member(Base):
     travel_style_7 = Column(String)  # 여행스타일7(계획적 vs 즉흥적)
     travel_style_8 = Column(String)  # 여행스타일8(사진 중요 vs 안중요)
     register_at = Column(String)
+    activated = Column(Boolean)
 
     visits = relationship('Visit', back_populates='member')
     favourites = relationship('Favourite', back_populates='member')

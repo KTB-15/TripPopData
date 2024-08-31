@@ -194,7 +194,8 @@ def to_member(data) -> Union[Base, None]:
         travel_style_6=data['TRAVEL_STYL_6'],
         travel_style_7=data['TRAVEL_STYL_7'],
         travel_style_8=data['TRAVEL_STYL_8'],
-        register_at=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        register_at=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        activated=True
     )
     # _logger.info(member)
     return member
