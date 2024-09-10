@@ -16,6 +16,7 @@ class DataSaver:
     def load_csv(self) -> Union[pd.DataFrame, None]:
         try:
             self.data = pd.read_csv(self.file_name)
+            _logger.info(f"데이터 개수: {len(self.data)}")
             return self.data
         except Exception as e:
             _logger.error(f"CSV {self.file_name} 로드 실패. ERROR: {e}")
