@@ -185,7 +185,6 @@ def to_member(data) -> Union[Base, None]:
         password=str(time.time()),
         gender='MALE' if data['GENDER'] == '남' else 'FEMALE',
         age=data['AGE_GRP'],
-        travel_like_sgg=data['TRAVEL_LIKE_SGG_1'],
         travel_style_1=data['TRAVEL_STYL_1'],
         travel_style_2=data['TRAVEL_STYL_2'],
         travel_style_3=data['TRAVEL_STYL_3'],

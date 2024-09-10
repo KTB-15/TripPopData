@@ -34,7 +34,7 @@ def insert_all_csv(file_name: str, model_class, convert):
 # check_visit_area_type(8)
 
 # SGG
-# insert_all_data(CSV_NAME.sgg, SGG, to_SGG)
+insert_all_data(CSV_NAME.sgg, SGG, to_SGG)
 
 # Member
 # insert_all_data(CSV_NAME.traveler, Member, to_member)
@@ -46,10 +46,10 @@ insert_all_csv('traveler', Member, to_member)
 # insert_all_data(CSV_NAME.visit_area_info, Place, to_place)
 
 # All places
-# insert_all_csv('visit_area_info', Place, to_place)
+insert_all_csv('visit_area_info', Place, to_place)
 
 # Visit
 # insert_all_data(CSV_NAME.visit_area_info, Visit, to_visit)
 
 # All visits
-# insert_all_csv('visit_area_info', Visit, to_visit)
+insert_all_csv('visit_area_info', Visit, to_visit)

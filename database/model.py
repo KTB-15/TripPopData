@@ -12,7 +12,6 @@ class Member(Base):
     nickname = Column(String)
     gender = Column(String)  # Male / Female
     age = Column(Integer)
-    travel_like_sgg = Column(String, ForeignKey('sgg.id'))
     travel_style_1 = Column(String)  # 여행스타일1(자연 vs 도시)
     travel_style_2 = Column(String)  # 여행스타일2(숙박 vs 당일)
     travel_style_3 = Column(String)  # 여행스타일3(새로운지역 vs 익숙한지역)
